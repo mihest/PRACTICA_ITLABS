@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from src.admins.models import AdminModel
 from src.admins.utils import is_valid_password
-# from src.admins.views import GuestAdmin, TableAdmin
+from src.admins.views import StandBiesAdmin
 from src.database import db
 
 
@@ -46,5 +46,4 @@ def init_admin(app):
     admin = Admin(app=app, engine=db.engine, authentication_backend=MyAuthenticationBackend(
         secret_key="SUPER_SECRET_KEY"
     ))
-    # admin.add_view(TableAdmin)
-    # admin.add_view(GuestAdmin)
+    admin.add_view(StandBiesAdmin)
