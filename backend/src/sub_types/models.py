@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy import UUID, String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.documents.models import DocumentModel
 from src.models import Base
-from src.types.models import TypeModel
 
 
 class SubTypeModel(Base):
@@ -21,13 +21,13 @@ class SubTypeModel(Base):
         nullable=False
     )
 
-    type: Mapped[TypeModel] = relationship(
-        TypeModel,
+    type: Mapped["TypeModel"] = relationship(
+        "TypeModel",
         back_populates="sub_types"
     )
-    documents: Mapped[list["DocumentModel"]] = relationship(
+    documents: Mapped[list[DocumentModel]] = relationship(
         "DocumentModel",
-        backref="sub_type",
+        back_populates="sub_type",
     )
 
 

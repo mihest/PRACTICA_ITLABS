@@ -4,6 +4,7 @@ from sqlalchemy import UUID, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models import Base
+from src.sub_types.models import SubTypeModel
 
 
 class TypeModel(Base):
@@ -16,7 +17,7 @@ class TypeModel(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
     sequence: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    sub_types: Mapped["SubTypeModel"] = relationship(
+    sub_types: Mapped[SubTypeModel] = relationship(
         "SubTypeModel",
         back_populates="type",
     )

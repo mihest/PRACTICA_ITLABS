@@ -3,7 +3,6 @@ import uuid
 from sqlalchemy import UUID, String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.documents.models import DocumentModel
 from src.models import Base
 
 
@@ -20,8 +19,8 @@ class VideoModel(Base):
         nullable=False
     )
 
-    document: Mapped[DocumentModel] = relationship(
-        DocumentModel,
+    document: Mapped['DocumentModel'] = relationship(
+        'DocumentModel',
         back_populates="videos"
     )
 

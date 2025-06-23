@@ -11,6 +11,7 @@ BaseDir = Path(__file__).parent.parent
 
 class Settings(BaseSettings):
     stand_bies_dir: Path = BaseDir / "media" / "stand_bies"
+    type_dir: Path = BaseDir / "media" / "images" / "type"
     base_dir: Path = BaseDir
 
     postgres_host: str

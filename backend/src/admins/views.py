@@ -6,14 +6,16 @@ from markupsafe import Markup
 from sqladmin import ModelView
 from wtforms import FileField
 
+from src.admins.utils import add_file, delete_file
 from src.config import settings
 from src.stand_bies.models import StandBiesModel
+from src.types.models import TypeModel
+
 
 class StandBiesAdmin(ModelView, model=StandBiesModel):
-
-    name = "Режим ожидания"
+    name = "режим ожидания"
     name_plural = "Режим ожидания"
-    icon = "fa fa-user"
+    icon = "fa fa-terminal"
 
     column_list = [
         "title",
@@ -21,11 +23,7 @@ class StandBiesAdmin(ModelView, model=StandBiesModel):
         "sequence"
     ]
     column_sortable_list = column_list
-    column_editable_list = [
-        "title",
-        "media",
-        "sequence"
-    ]
+    column_editable_list = column_list
     column_searchable_list = [
         "title"
     ]
@@ -52,28 +50,63 @@ class StandBiesAdmin(ModelView, model=StandBiesModel):
         file = data["media"]
 
         if file and hasattr(file, "filename"):
-            os.makedirs(settings.stand_bies_dir, exist_ok=True)
+            file_path = await add_file(file, settings.stand_bies_dir)
 
-            original_name = os.path.splitext(file.filename)[0]
-            extension = os.path.splitext(file.filename)[1]
-            random_str = uuid.uuid4().hex[:20]
-            filename = f"{original_name}-{random_str}{extension}"
-            save_path = os.path.join(settings.stand_bies_dir, filename)
-
-            with open(save_path, "wb") as f:
-                shutil.copyfileobj(file.file, f)
-
-            model.media = f"/media/stand_bies/{filename}"
-            data["media"] = f"/media/stand_bies/{filename}"
+            model.media = f"/media/stand_bies/{file_path}"
+            data["media"] = f"/media/stand_bies/{file_path}"
         return model
 
     async def on_model_delete(self, model, request):
-        media_path = model.media.lstrip('/')
-        file_path = settings.base_dir / media_path
-        if file_path.exists():
-            try:
-                file_path.unlink()
-            except Exception as e:
-                print(f"Ошибка при удалении файла: {e}")
-        else:
-            print("Файл не найден")
+        await delete_file(model.media)
+
+class TypeAdmin(ModelView, model=TypeModel):
+    name = "тип"
+    name_plural = 'Типы'
+    icon = "fa fa-list"
+
+    column_list = [
+        "title",
+        "description",
+        "sequence",
+        "image"
+    ]
+    column_sortable_list = column_list
+    column_editable_list = column_list
+    column_searchable_list = [
+        "title"
+    ]
+    column_default_sort = "sequence"
+    column_details_list = column_list
+    form_columns = column_list
+
+    column_labels = {
+        "title": "Название",
+        "image": "Изображение",
+        "description": "Описание",
+        "sequence": "Порядок отоброжения"
+    }
+
+    form_overrides = {
+        "image": FileField
+    }
+
+    column_formatters = {
+        "image": lambda model, _: Markup(
+            f'<img src="{model.image}">'
+        )
+    }
+
+    async def on_model_change(self, data, model, is_created, request):
+        file = data["image"]
+
+        if file and hasattr(file, "filename"):
+            file_path = await add_file(file, settings.type_dir)
+
+            model.image = f"/media/images/type/{file_path}"
+            data["image"] = f"/media/images/type/{file_path}"
+        return model
+
+    async def on_model_delete(self, model, request):
+        await delete_file(model.image)
+
+

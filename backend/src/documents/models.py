@@ -4,7 +4,7 @@ from sqlalchemy import UUID, String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models import Base
-from src.sub_types.models import SubTypeModel
+from src.videos.models import VideoModel
 
 
 class DocumentModel(Base):
@@ -21,11 +21,11 @@ class DocumentModel(Base):
         nullable=False
     )
 
-    sub_type: Mapped[SubTypeModel] = relationship(
+    sub_type: Mapped['SubTypeModel'] = relationship(
         'SubTypeModel',
-        backref='documents',
+        back_populates='documents',
     )
-    videos: Mapped[list["VideoModel"]] = relationship(
+    videos: Mapped[list[VideoModel]] = relationship(
         "VideoModel",
         back_populates="document"
     )
