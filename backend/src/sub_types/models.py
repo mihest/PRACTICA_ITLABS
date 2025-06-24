@@ -13,7 +13,7 @@ class SubTypeModel(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
-    title: Mapped[String] = mapped_column(String, nullable=False)
+    title: Mapped[str] = mapped_column(String, nullable=False)
     image: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     sequence: Mapped[int] = mapped_column(Integer, nullable=False)
     type_id: Mapped[uuid.UUID] = mapped_column(
@@ -29,7 +29,8 @@ class SubTypeModel(Base):
     documents: Mapped[list[DocumentModel]] = relationship(
         "DocumentModel",
         back_populates="sub_type",
-        lazy="joined"
+        lazy="joined",
+        order_by="DocumentModel.sequence"
     )
 
 
