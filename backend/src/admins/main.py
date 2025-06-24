@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from src.admins.models import AdminModel
 from src.admins.utils import is_valid_password
-from src.admins.views import StandBiesAdmin, TypeAdmin
+from src.admins.views import StandBiesAdmin, TypeAdmin, SubTypeAdmin
 from src.database import db
 
 
@@ -47,4 +47,5 @@ def init_admin(app):
         secret_key="SUPER_SECRET_KEY"
     ))
     admin.add_view(TypeAdmin)
+    admin.add_view(SubTypeAdmin)
     admin.add_view(StandBiesAdmin)

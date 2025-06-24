@@ -27,7 +27,8 @@ class DocumentModel(Base):
     )
     videos: Mapped[list[VideoModel]] = relationship(
         "VideoModel",
-        back_populates="document"
+        back_populates="document",
+        lazy="joined"
     )
 
 
