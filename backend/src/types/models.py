@@ -17,9 +17,10 @@ class TypeModel(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
     sequence: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    sub_types: Mapped[SubTypeModel] = relationship(
+    sub_types: Mapped[list[SubTypeModel]] = relationship(
         "SubTypeModel",
         back_populates="type",
+        order_by="SubTypeModel.sequence"
     )
 
 
